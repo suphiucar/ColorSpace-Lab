@@ -1,0 +1,5 @@
+{
+  "name": "ColorSpace Lab",
+  "description": "An interactive educational tool for Computer Vision students to visualize, compare, and understand 3D color models (RGB, HSV, Lab) and image channel separation.",
+  "requestFramePermissions": []
+}
