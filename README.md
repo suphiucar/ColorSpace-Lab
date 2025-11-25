@@ -21,7 +21,13 @@ Upload any image to decompose it into its constituent channels based on the sele
 - How **YCbCr** separates luminance for compression.
 - How **CMYK** handles ink separation.
 
-### 3. AI Professor (Gemini Powered)
+### 3. Universal Color Converter
+A bidirectional conversion tool that bridges all 7 supported color models.
+- **Real-time Conversion**: Input values in any selected color space (e.g., CMYK or Lab) and instantly see the mathematical equivalents in all other models.
+- **Interactive Preview**: Adjust sliders to see color shifts dynamically.
+- **Copy-Ready Formats**: Quickly copy values in standard formats (e.g., `rgb(r,g,b)`, `hsv(h,s,v)`).
+
+### 4. AI Professor (Gemini Powered)
 An integrated AI assistant that provides:
 - Mathematical definitions of coordinate systems.
 - Practical use cases in Computer Vision (e.g., segmentation, perception, printing).
