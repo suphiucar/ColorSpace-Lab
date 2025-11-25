@@ -1,10 +1,9 @@
 # ColorSpace Lab
 
-**ColorSpace Lab** is an interactive educational tool designed for Computer Vision students. It allows users to visualize, compare, and understand various 3D color models and the mathematics behind image channel separation.
+**ColorSpace Lab** is an interactive educational tool designed for Digital Image Processing students. It allows users to visualize, compare, and understand various 3D color models and the mathematics behind image channel separation.
 
-![App Screenshot](./ColorSpaceLab.png)
+![App Screenshot](ColorSpaceLab.png)
 
-> **Note:** This application uses the **Google Gemini API** to provide real-time, expert-level explanations for each color model.
 
 ## Features
 
