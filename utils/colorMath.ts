@@ -5,6 +5,8 @@ export const rgbToHex = (r: number, g: number, b: number): string => {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 };
 
+// --- RGB to Model ---
+
 // RGB to HSV
 export const rgbToHsv = (r: number, g: number, b: number): HSV => {
   r /= 255; g /= 255; b /= 255;
@@ -77,7 +79,6 @@ export const rgbToHsi = (r: number, g: number, b: number): HSI => {
   };
 };
 
-
 // RGB to CMYK
 export const rgbToCmyk = (r: number, g: number, b: number): CMYK => {
   let c = 0, m = 0, y = 0, k = 0;
@@ -141,4 +142,115 @@ export const rgbToYCbCr = (r: number, g: number, b: number): YCBCR => {
     cb: Math.round(cb),
     cr: Math.round(cr)
   };
+};
+
+// --- Model to RGB (Inverse) ---
+
+const clamp = (val: number) => Math.round(Math.max(0, Math.min(255, val)));
+
+export const hsvToRgb = (h: number, s: number, v: number): RGB => {
+  h /= 360; s /= 100; v /= 100;
+  let r = 0, g = 0, b = 0;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+  return { r: clamp(r * 255), g: clamp(g * 255), b: clamp(b * 255) };
+};
+
+export const hslToRgb = (h: number, s: number, l: number): RGB => {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  return { r: clamp(r * 255), g: clamp(g * 255), b: clamp(b * 255) };
+};
+
+export const hsiToRgb = (h: number, s: number, i: number): RGB => {
+  h = h % 360; 
+  if (h < 0) h += 360;
+  s /= 100;
+  i /= 100;
+
+  const hRad = h * (Math.PI / 180);
+  let r = 0, g = 0, b = 0;
+
+  if (h < 120) {
+    b = i * (1 - s);
+    r = i * (1 + (s * Math.cos(hRad)) / Math.cos((60 * Math.PI / 180) - hRad));
+    g = 3 * i - (r + b);
+  } else if (h < 240) {
+    const hShift = hRad - (120 * Math.PI / 180);
+    r = i * (1 - s);
+    g = i * (1 + (s * Math.cos(hShift)) / Math.cos((60 * Math.PI / 180) - hShift));
+    b = 3 * i - (r + g);
+  } else {
+    const hShift = hRad - (240 * Math.PI / 180);
+    g = i * (1 - s);
+    b = i * (1 + (s * Math.cos(hShift)) / Math.cos((60 * Math.PI / 180) - hShift));
+    r = 3 * i - (g + b);
+  }
+  return { r: clamp(r * 255), g: clamp(g * 255), b: clamp(b * 255) };
+};
+
+export const cmykToRgb = (c: number, m: number, y: number, k: number): RGB => {
+  c /= 100; m /= 100; y /= 100; k /= 100;
+  const r = 255 * (1 - c) * (1 - k);
+  const g = 255 * (1 - m) * (1 - k);
+  const b = 255 * (1 - y) * (1 - k);
+  return { r: clamp(r), g: clamp(g), b: clamp(b) };
+};
+
+export const labToRgb = (l: number, a: number, b: number): RGB => {
+  let y = (l + 16) / 116;
+  let x = a / 500 + y;
+  let z = y - b / 200;
+
+  const pow3 = (v: number) => (Math.pow(v, 3) > 0.008856 ? Math.pow(v, 3) : (v - 16 / 116) / 7.787);
+  x = pow3(x) * 95.047;
+  y = pow3(y) * 100.000;
+  z = pow3(z) * 108.883;
+
+  x /= 100; y /= 100; z /= 100;
+
+  let r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+  let g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+  let bl = x * 0.0557 + y * -0.2040 + z * 1.0570;
+
+  const gamma = (v: number) => (v > 0.0031308 ? 1.055 * Math.pow(v, 1 / 2.4) - 0.055 : 12.92 * v);
+  return { r: clamp(gamma(r) * 255), g: clamp(gamma(g) * 255), b: clamp(gamma(bl) * 255) };
+};
+
+export const yCbCrToRgb = (y: number, cb: number, cr: number): RGB => {
+  // ITU-R BT.601 conversion (Standard definition TV)
+  const r = y + 1.402 * (cr - 128);
+  const g = y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128);
+  const b = y + 1.772 * (cb - 128);
+  return { r: clamp(r), g: clamp(g), b: clamp(b) };
 };

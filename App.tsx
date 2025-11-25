@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { ColorModel } from './types';
 import ColorVisualizer3D from './components/ColorVisualizer3D';
 import ChannelSplitter from './components/ChannelSplitter';
-import { LayoutGrid, Box, Layers, Info, BrainCircuit } from 'lucide-react';
+import ColorConverter from './components/ColorConverter';
+import { LayoutGrid, Box, Layers, Info, BrainCircuit, RefreshCcw } from 'lucide-react';
 import { explainColorModel } from './services/geminiService';
 import ReactMarkdown from 'react-markdown';
 
 function App() {
   const [activeModel, setActiveModel] = useState<ColorModel>(ColorModel.RGB);
-  const [activeTab, setActiveTab] = useState<'visualizer' | 'splitter'>('visualizer');
+  const [activeTab, setActiveTab] = useState<'visualizer' | 'splitter' | 'converter'>('visualizer');
   const [explanation, setExplanation] = useState<string>('');
   const [loadingAi, setLoadingAi] = useState(false);
 
@@ -22,6 +23,14 @@ function App() {
     };
     fetchExplanation();
   }, [activeModel]);
+
+  const getTabTitle = () => {
+      switch(activeTab) {
+          case 'visualizer': return '3D Visualization';
+          case 'splitter': return 'Channel Separation';
+          case 'converter': return 'Color Converter';
+      }
+  }
 
   return (
     <div className="flex h-screen w-full bg-slate-950 text-slate-200">
@@ -71,6 +80,12 @@ function App() {
                 >
                     <LayoutGrid size={16} /> Image Channel Splitter
                 </button>
+                <button 
+                    onClick={() => setActiveTab('converter')}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm ${activeTab === 'converter' ? 'bg-slate-800 text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                    <RefreshCcw size={16} /> Color Converter
+                </button>
              </div>
           </div>
         </div>
@@ -86,7 +101,7 @@ function App() {
           <h2 className="text-lg font-medium flex items-center gap-2">
              <span className="text-slate-400">{activeModel}</span>
              <span className="text-slate-600">/</span>
-             <span className="text-white">{activeTab === 'visualizer' ? '3D Visualization' : 'Channel Separation'}</span>
+             <span className="text-white">{getTabTitle()}</span>
           </h2>
           <div className="flex items-center gap-4">
               <span className="px-3 py-1 bg-slate-800 rounded-full text-xs font-mono text-indigo-300 border border-slate-700">
@@ -99,11 +114,9 @@ function App() {
             
             {/* Left/Center Panel: The Main Tool */}
             <div className="flex-1 flex flex-col min-w-0 h-full">
-                {activeTab === 'visualizer' ? (
-                     <ColorVisualizer3D model={activeModel} />
-                ) : (
-                    <ChannelSplitter model={activeModel} />
-                )}
+                {activeTab === 'visualizer' && <ColorVisualizer3D model={activeModel} />}
+                {activeTab === 'splitter' && <ChannelSplitter model={activeModel} />}
+                {activeTab === 'converter' && <ColorConverter model={activeModel} />}
             </div>
 
             {/* Right Panel: Educational Context */}
