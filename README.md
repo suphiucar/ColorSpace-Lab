@@ -1,20 +1,53 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ColorSpace Lab
 
-# Run and deploy your AI Studio app
+**ColorSpace Lab** is an interactive educational tool designed for Computer Vision students. It allows users to visualize, compare, and understand various 3D color models and the mathematics behind image channel separation.
 
-This contains everything you need to run your app locally.
+![App Screenshot](./ColorSpaceLab.png)
 
-View your app in AI Studio: https://ai.studio/apps/drive/1BxSGHR0hvBohZGGJh_E40kVNuMHpYzlJ
+> **Note:** This application uses the **Google Gemini API** to provide real-time, expert-level explanations for each color model.
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+### 1. Interactive 3D Space Visualizer
+Visualize how colors are distributed in 3D space for different models.
+- **RGB**: The standard cube.
+- **HSV / HSL / HSI**: Cylindrical and conical representations.
+- **Lab**: Perceptually uniform spherical/blob shape.
+- **CMYK**: Subtractive color cube.
+- **YCbCr**: Luma/Chroma separation.
 
+### 2. Image Channel Splitter
+Upload any image to decompose it into its constituent channels based on the selected color model. This helps students understand concepts like:
+- Why **HSV** is better for color thresholding.
+- How **YCbCr** separates luminance for compression.
+- How **CMYK** handles ink separation.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 3. AI Professor (Gemini Powered)
+An integrated AI assistant that provides:
+- Mathematical definitions of coordinate systems.
+- Practical use cases in Computer Vision (e.g., segmentation, perception, printing).
+- Real-time analysis of channel utility.
+
+## Supported Color Models
+- **RGB** (Red, Green, Blue)
+- **CMYK** (Cyan, Magenta, Yellow, Key)
+- **HSV** (Hue, Saturation, Value)
+- **HSL** (Hue, Saturation, Lightness)
+- **HSI** (Hue, Saturation, Intensity)
+- **Lab** (CIE L*a*b*)
+- **YCbCr** (Luminance, Chroma Blue, Chroma Red)
+
+## Technologies
+
+- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **Graphics**: HTML5 Canvas (Custom 3D point cloud engine)
+- **AI**: Google GenAI SDK (`@google/genai`)
+
+## Setup
+
+1. Clone the repository.
+2. Create a `.env` file with your Gemini API Key:
+   ```env
+   API_KEY=your_google_api_key_here
+   ```
+3. Install dependencies and run.
