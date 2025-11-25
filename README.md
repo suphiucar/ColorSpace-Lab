@@ -2,7 +2,7 @@
 
 **ColorSpace Lab** is an interactive educational tool designed for Digital Image Processing students. It allows users to visualize, compare, and understand various 3D color models and the mathematics behind image channel separation.
 
-![App Screenshot](ColorSpaceLab.png)
+![App Screenshot](Screenshot.png)
 
 
 ## Features
@@ -10,9 +10,9 @@
 ### 1. Interactive 3D Space Visualizer
 Visualize how colors are distributed in 3D space for different models.
 - **RGB**: The standard cube.
+- **CMYK**: Subtractive color cube.
 - **HSV / HSL / HSI**: Cylindrical and conical representations.
 - **Lab**: Perceptually uniform spherical/blob shape.
-- **CMYK**: Subtractive color cube.
 - **YCbCr**: Luma/Chroma separation.
 
 ### 2. Image Channel Splitter
